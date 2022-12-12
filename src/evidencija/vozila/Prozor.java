@@ -4,12 +4,14 @@
  */
 package evidencija.vozila;
 
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
+
+import java.awt.event.KeyEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -126,6 +128,11 @@ public final class Prozor extends javax.swing.JFrame {
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
+            }
+        });
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
             }
         });
 
@@ -500,6 +507,26 @@ public final class Prozor extends javax.swing.JFrame {
         }   
     }//GEN-LAST:event_jTextField5ActionPerformed
 
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            try {
+                c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
+                String ID = (jTextField1.getText());
+                String sql = "SELECT * FROM Automobil WHERE AutomobilID = "+ID;
+                Statement s = c.createStatement();
+                
+                ResultSet rs = s.executeQuery(sql);
+                rs.next();
+                jTextField2.setText(rs.getString("RegBroj"));
+                jTextField3.setText(rs.getString("Godiste"));
+                jTextField4.setText(rs.getString("PredjenoKilometara"));
+                jTextField5.setText(rs.getString("Cena"));
+            } catch (SQLException ex) {
+                Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1KeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -584,6 +611,7 @@ public final class Prozor extends javax.swing.JFrame {
             ResultSet rs1 = s.executeQuery("SELECT * FROM Model");
             DefaultTableModel dtm = new DefaultTableModel();
             DefaultComboBoxModel<VoziloDO> dcbm = new DefaultComboBoxModel<>();
+            
             dtm.addColumn("VoziloID");
             dtm.addColumn("Registracija");
             dtm.addColumn("Predjeno KM");
@@ -610,9 +638,11 @@ public final class Prozor extends javax.swing.JFrame {
                VoziloDO vozilo = new VoziloDO();
                vozilo.model = rs1.getString("Naziv");
                dcbm.addElement(vozilo); 
+               
             }
             jTable1.setModel(dtm);
             jComboBox1.setModel(dcbm);
+            
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(Prozor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
