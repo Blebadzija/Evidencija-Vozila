@@ -27,6 +27,10 @@ public final class Prozor extends javax.swing.JFrame {
     public Prozor() {       
         initComponents();
         populate();
+        jComboBox2.setEnabled(false);
+        jComboBox3.setEnabled(false);
+        jComboBox4.setEnabled(false);
+        
         try {
             c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
         } catch (SQLException ex) {
@@ -80,6 +84,7 @@ public final class Prozor extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         jButton3 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -234,7 +239,16 @@ public final class Prozor extends javax.swing.JFrame {
 
         jLabel10.setText("Gorivo");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox2ActionPerformed(evt);
+            }
+        });
+        jComboBox2.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jComboBox2PropertyChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -251,14 +265,14 @@ public final class Prozor extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
                                 .addComponent(jLabel10)
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBox4, 0, 149, Short.MAX_VALUE))
+                                .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8)
                                     .addComponent(jLabel9))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jComboBox2, 0, 156, Short.MAX_VALUE)
                                     .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addGap(99, 99, 99))
         );
@@ -279,7 +293,7 @@ public final class Prozor extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         jButton1.setText("Izmeni");
@@ -406,6 +420,30 @@ public final class Prozor extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Analiza", jPanel4);
 
+        jPanel7.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPanel7FocusGained(evt);
+            }
+        });
+        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel7MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 878, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 466, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Izlaz", jPanel7);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -421,7 +459,8 @@ public final class Prozor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
-        // TODO add your handling code here:
+        int selectedTab = jTabbedPane1.getSelectedIndex();
+        if(selectedTab == 3) System.exit(0); 
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -431,6 +470,9 @@ public final class Prozor extends javax.swing.JFrame {
         jTextField3.setEditable(false);
         jTextField4.setEditable(false);
         jTextField5.setEditable(false);
+        jComboBox2.setEnabled(false);
+        jComboBox3.setEnabled(false);
+        jComboBox4.setEnabled(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -440,6 +482,9 @@ public final class Prozor extends javax.swing.JFrame {
         jTextField3.setEditable(true);
         jTextField4.setEditable(true);
         jTextField5.setEditable(true);
+        jComboBox2.setEnabled(true);
+        jComboBox3.setEnabled(true);
+        jComboBox4.setEnabled(true);
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -506,7 +551,9 @@ public final class Prozor extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Prozor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }   
     }//GEN-LAST:event_jTextField5ActionPerformed
-
+    private void onTabChanged(String tabId){
+        
+    }
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_ENTER){
             try {
@@ -526,6 +573,29 @@ public final class Prozor extends javax.swing.JFrame {
             }
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
+                // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel7MouseClicked
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        try {
+            c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
+            int ID = Integer.parseInt (jTextField1.getText());
+            Object model = jComboBox2.getSelectedItem();
+            String sql = "INSERT INTO Automobil(ModelID) VALUES('"+model+"') WHERE ModelID = "+ID;
+        } catch (SQLException ex) {
+            Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }//GEN-LAST:event_jComboBox2ActionPerformed
+
+    private void jComboBox2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jComboBox2PropertyChange
+        
+    }//GEN-LAST:event_jComboBox2PropertyChange
+
+    private void jPanel7FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPanel7FocusGained
+               // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel7FocusGained
 
     /**
      * @param args the command line arguments
@@ -570,9 +640,9 @@ public final class Prozor extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<VoziloDO> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JComboBox<String> jComboBox4;
+    private javax.swing.JComboBox<VoziloDO> jComboBox2;
+    private javax.swing.JComboBox<VoziloDO> jComboBox3;
+    private javax.swing.JComboBox<VoziloDO> jComboBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -590,6 +660,7 @@ public final class Prozor extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -609,8 +680,13 @@ public final class Prozor extends javax.swing.JFrame {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM Automobil");
             ResultSet rs1 = s.executeQuery("SELECT * FROM Model");
+            ResultSet rs2 = s.executeQuery("SELECT * FROM Boje");
+            ResultSet rs3 = s.executeQuery("SELECT * FROM Gorivo");
             DefaultTableModel dtm = new DefaultTableModel();
             DefaultComboBoxModel<VoziloDO> dcbm = new DefaultComboBoxModel<>();
+            DefaultComboBoxModel<VoziloDO> dcbm1 = new DefaultComboBoxModel<>();
+            DefaultComboBoxModel<VoziloDO> dcbm2 = new DefaultComboBoxModel<>();
+            
             
             dtm.addColumn("VoziloID");
             dtm.addColumn("Registracija");
@@ -636,12 +712,34 @@ public final class Prozor extends javax.swing.JFrame {
             }
             while(rs1.next()){
                VoziloDO vozilo = new VoziloDO();
-               vozilo.model = rs1.getString("Naziv");
-               dcbm.addElement(vozilo); 
+               vozilo.dodatno = rs1.getString("Naziv");
+               dcbm.addElement(vozilo);
                
             }
+            
+            while(rs2.next()){
+               VoziloDO vozilo = new VoziloDO();
+               vozilo.dodatno = rs2.getString("Naziv");
+               dcbm1.addElement(vozilo); 
+            }
+            
+            while(rs3.next()){
+               VoziloDO vozilo = new VoziloDO();
+               vozilo.dodatno = rs3.getString("Naziv");
+               dcbm2.addElement(vozilo); 
+            }
+            
+            
+            
+            
+            
+                    
             jTable1.setModel(dtm);
             jComboBox1.setModel(dcbm);
+            jComboBox2.setModel(dcbm);
+            jComboBox3.setModel(dcbm1);
+            jComboBox4.setModel(dcbm2);
+            
             
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(Prozor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);

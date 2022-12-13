@@ -4,18 +4,24 @@
  */
 package evidencija.vozila;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Computer
  */
 public class VoziloDO {
     
-    public String model;
+    public String dodatno;
+    
+    
    
     
     @Override
     public String toString(){
-        return model;
+       return dodatno;
     }
+    
+    
     
 }
