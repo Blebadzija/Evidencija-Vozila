@@ -560,6 +560,9 @@ public final class Prozor extends javax.swing.JFrame {
                 c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
                 String ID = (jTextField1.getText());
                 String sql = "SELECT * FROM Automobil WHERE AutomobilID = "+ID;
+                String sql1 = "SELECT * FROM Automobil, Model.Naziv\n" +
+                              "FROM Automobil\n" +
+                              "INNER JOIN Model ON Automobil.ModelID = Model.ID WHERE AutomobilID ="+ID;
                 Statement s = c.createStatement();
                 
                 ResultSet rs = s.executeQuery(sql);
@@ -568,6 +571,12 @@ public final class Prozor extends javax.swing.JFrame {
                 jTextField3.setText(rs.getString("Godiste"));
                 jTextField4.setText(rs.getString("PredjenoKilometara"));
                 jTextField5.setText(rs.getString("Cena"));
+                
+                ResultSet rs1 = s.executeQuery(sql1);
+                rs1.next();
+                jComboBox2.setSelectedItem(rs1.getInt("ModelID"));
+                
+                
             } catch (SQLException ex) {
                 Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
             }
