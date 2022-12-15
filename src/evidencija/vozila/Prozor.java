@@ -82,6 +82,7 @@ public final class Prozor extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
@@ -250,6 +251,18 @@ public final class Prozor extends javax.swing.JFrame {
             }
         });
 
+        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox3ActionPerformed(evt);
+            }
+        });
+
+        jComboBox4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -370,7 +383,25 @@ public final class Prozor extends javax.swing.JFrame {
             }
         });
 
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable2);
+
         jButton3.setText("Prikazi");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -496,6 +527,7 @@ public final class Prozor extends javax.swing.JFrame {
             String sql = "UPDATE Automobil SET Godiste = '"+godproizvodnje+"' WHERE AutomobilID = '"+ID+"'";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.execute();
+            populate();
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(Prozor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }        
@@ -509,6 +541,7 @@ public final class Prozor extends javax.swing.JFrame {
             String sql = "UPDATE Automobil SET RegBroj = '"+registracija+"' WHERE AutomobilID = '"+ID+"'";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.execute();
+            populate();
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(Prozor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
@@ -534,6 +567,7 @@ public final class Prozor extends javax.swing.JFrame {
             String sql = "UPDATE Automobil SET PredjenoKilometara = '"+predjenokm+"' WHERE AutomobilID = '"+ID+"'";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.execute();
+            populate();
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(Prozor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
@@ -547,6 +581,7 @@ public final class Prozor extends javax.swing.JFrame {
             String sql = "UPDATE Automobil SET Cena = '"+cena+"' WHERE AutomobilID = '"+ID+"'";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.execute();
+            populate();
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(Prozor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }   
@@ -558,23 +593,32 @@ public final class Prozor extends javax.swing.JFrame {
         if(evt.getKeyCode()==KeyEvent.VK_ENTER){
             try {
                 c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
+                Statement s = c.createStatement();
                 String ID = (jTextField1.getText());
                 String sql = "SELECT * FROM Automobil WHERE AutomobilID = "+ID;
-                String sql1 = "SELECT * FROM Automobil, Model.Naziv\n" +
+                String sqlModel = "SELECT Automobil.AutomobilID, Model.ID, Model.Naziv\n" +
                               "FROM Automobil\n" +
                               "INNER JOIN Model ON Automobil.ModelID = Model.ID WHERE AutomobilID ="+ID;
-                Statement s = c.createStatement();
+                String sqlBoja = "SELECT Automobil.AutomobilID, Boje.ID, Boje.Naziv\n" +
+                              "FROM Automobil\n" +
+                              "INNER JOIN Boje ON Automobil.BojeID = Boje.ID WHERE AutomobilID ="+ID;
+                String sqlGorivo = "SELECT Automobil.AutomobilID, Gorivo.ID, Gorivo.Naziv\n" +
+                              "FROM Automobil\n" +
+                              "INNER JOIN Gorivo ON Automobil.GorivoID = Gorivo.ID WHERE AutomobilID ="+ID;
                 
-                ResultSet rs = s.executeQuery(sql);
-                rs.next();
-                jTextField2.setText(rs.getString("RegBroj"));
-                jTextField3.setText(rs.getString("Godiste"));
-                jTextField4.setText(rs.getString("PredjenoKilometara"));
-                jTextField5.setText(rs.getString("Cena"));
                 
-                ResultSet rs1 = s.executeQuery(sql1);
-                rs1.next();
-                jComboBox2.setSelectedItem(rs1.getInt("ModelID"));
+                ResultSet rsID = s.executeQuery(sql);
+                rsID.next();
+                jTextField2.setText(rsID.getString("RegBroj"));
+                jTextField3.setText(rsID.getString("Godiste"));
+                jTextField4.setText(rsID.getString("PredjenoKilometara"));
+                jTextField5.setText(rsID.getString("Cena"));
+                
+                ResultSet rsModel = s.executeQuery(sqlModel);            
+                rsModel.next(); 
+                jComboBox2.setSelectedIndex(rsModel.getInt("ID")-1);
+                
+
                 
                 
             } catch (SQLException ex) {
@@ -591,11 +635,16 @@ public final class Prozor extends javax.swing.JFrame {
         try {
             c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
             int ID = Integer.parseInt (jTextField1.getText());
-            Object model = jComboBox2.getSelectedItem();
-            String sql = "INSERT INTO Automobil(ModelID) VALUES('"+model+"') WHERE ModelID = "+ID;
+            Object model = jComboBox2.getSelectedIndex()+1;
+            
+            String sql = "UPDATE Automobil SET ModelID = '"+model+"' WHERE AutomobilID = "+ID;
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.execute();
+            populate();
         } catch (SQLException ex) {
             Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
         } 
+        
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jComboBox2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jComboBox2PropertyChange
@@ -605,6 +654,40 @@ public final class Prozor extends javax.swing.JFrame {
     private void jPanel7FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPanel7FocusGained
                // TODO add your handling code here:
     }//GEN-LAST:event_jPanel7FocusGained
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
+        try {
+            c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
+            int ID = Integer.parseInt (jTextField1.getText());
+            Object boja = jComboBox3.getSelectedIndex()+1;
+            
+            String sql = "UPDATE Automobil SET BojeID = '"+boja+"' WHERE AutomobilID = "+ID;
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.execute();
+            populate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox3ActionPerformed
+
+    private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
+        try {
+            c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
+            int ID = Integer.parseInt (jTextField1.getText());
+            Object gorivo = jComboBox4.getSelectedIndex()+1;
+            
+            String sql = "UPDATE Automobil SET GorivoID = '"+gorivo+"' WHERE AutomobilID = "+ID;
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.execute();
+            populate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -675,6 +758,7 @@ public final class Prozor extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
@@ -688,9 +772,9 @@ public final class Prozor extends javax.swing.JFrame {
             c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM Automobil");
-            ResultSet rs1 = s.executeQuery("SELECT * FROM Model");
-            ResultSet rs2 = s.executeQuery("SELECT * FROM Boje");
-            ResultSet rs3 = s.executeQuery("SELECT * FROM Gorivo");
+            ResultSet rsmodel = s.executeQuery("SELECT * FROM Model");
+            ResultSet rsboja = s.executeQuery("SELECT * FROM Boje");
+            ResultSet rsgorivo = s.executeQuery("SELECT * FROM Gorivo");
             DefaultTableModel dtm = new DefaultTableModel();
             DefaultComboBoxModel<VoziloDO> dcbm = new DefaultComboBoxModel<>();
             DefaultComboBoxModel<VoziloDO> dcbm1 = new DefaultComboBoxModel<>();
@@ -712,29 +796,29 @@ public final class Prozor extends javax.swing.JFrame {
                 red[1] = rs.getString("RegBroj");
                 red[2] = rs.getInt("PredjenoKilometara");
                 red[3] = rs.getInt("Godiste");
-                red[4] = rs.getInt("GorivoID");
+                red[4] = rs.getInt("ModelID");
                 red[5] = rs.getInt("BojeID");
-                red[6] = rs.getInt("ModelID");
+                red[6] = rs.getInt("GorivoID");
                 red[7] = rs.getInt("Cena");
                 dtm.addRow(red);
                 
             }
-            while(rs1.next()){
+            while(rsmodel.next()){
                VoziloDO vozilo = new VoziloDO();
-               vozilo.dodatno = rs1.getString("Naziv");
+               vozilo.dodatno = rsmodel.getString("Naziv");
                dcbm.addElement(vozilo);
                
             }
             
-            while(rs2.next()){
+            while(rsboja.next()){
                VoziloDO vozilo = new VoziloDO();
-               vozilo.dodatno = rs2.getString("Naziv");
+               vozilo.dodatno = rsboja.getString("Naziv");
                dcbm1.addElement(vozilo); 
             }
             
-            while(rs3.next()){
+            while(rsgorivo.next()){
                VoziloDO vozilo = new VoziloDO();
-               vozilo.dodatno = rs3.getString("Naziv");
+               vozilo.dodatno = rsgorivo.getString("Naziv");
                dcbm2.addElement(vozilo); 
             }
             
