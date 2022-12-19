@@ -586,6 +586,7 @@ public final class Prozor extends javax.swing.JFrame {
             PreparedStatement ps = c.prepareStatement(sql);
             ps.execute();
             populate();
+            jComboBox2.setSelectedIndex((int) model- 1);
         } catch (SQLException ex) {
             Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
         } 

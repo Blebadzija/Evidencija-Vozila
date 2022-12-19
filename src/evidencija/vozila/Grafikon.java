@@ -74,13 +74,10 @@ public class Grafikon extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -145,9 +142,10 @@ public class Grafikon extends javax.swing.JFrame {
         int modelID = ((VoziloDO)jComboBox1.getSelectedItem()).id;
         try {
             c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
-            PreparedStatement ps = this.c.prepareStatement("SELECT ModelID, Godiste AS GodinaProzivodnje, Cena AS ProsecnaCena FROM Automobil WHERE ModelID = '"+modelID+"' ");
-  
-            ResultSet rs = ps.executeQuery();
+            //PreparedStatement ps = this.c.prepareStatement("SELECT ModelID, Godiste AS GodinaProzivodnje, Cena AS ProsecnaCena FROM Automobil WHERE ModelID = '"+modelID+"' ");
+            Statement s = this.c.createStatement();
+            
+            ResultSet rs = s.executeQuery("SELECT ModelID, Godiste AS GodinaProzivodnje, AVG(Cena) AS ProsecnaCena FROM Automobil WHERE ModelID = '"+modelID+"' GROUP BY ModelID, Godiste");
             DefaultTableModel dtm = new DefaultTableModel();
             DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
             dtm.addColumn("GodinaProzivodnje");
@@ -165,23 +163,7 @@ public class Grafikon extends javax.swing.JFrame {
             jTable1.setModel(dtm);
             
             
-            jPanel1.setLayout(new java.awt.BorderLayout());
-            for(int i=0; i<jTable1.getRowCount(); i++){
-                dataset.addValue(Integer.parseInt((String)jTable1.getValueAt(i, 2)), "ProsecnaCena", (String)jTable1.getValueAt(i, 1));  
-                            
-            }           
-             JFreeChart chart = ChartFactory.createPieChart(  
-                "Pie Chart Example",  
-                dataset,  
-                true,   
-                true,  
-                false);  
             
-            ChartPanel CP = new ChartPanel(chart);
-            
-            jPanel1.removeAll(); 
-            jPanel1.add(CP,BorderLayout.CENTER);
-            jPanel1.validate();
         } catch (SQLException ex) {
             Logger.getLogger(Grafikon.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -246,6 +228,7 @@ public class Grafikon extends javax.swing.JFrame {
             
             while(rsmodel.next()){
                VoziloDO vozilo = new VoziloDO();
+               vozilo.id = rsmodel.getInt("ID");
                vozilo.dodatno = rsmodel.getString("Naziv");
                dcbm.addElement(vozilo);   
             }
