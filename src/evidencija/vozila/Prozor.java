@@ -441,6 +441,10 @@ public final class Prozor extends javax.swing.JFrame {
         jComboBox2.setEnabled(false);
         jComboBox3.setEnabled(false);
         jComboBox4.setEnabled(false);
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -535,9 +539,9 @@ public final class Prozor extends javax.swing.JFrame {
                 String sqlBoja = "SELECT Automobil.AutomobilID, Boje.ID, Boje.Naziv\n" +
                               "FROM Automobil\n" +
                               "INNER JOIN Boje ON Automobil.BojeID = Boje.ID WHERE AutomobilID ="+ID;
-                String sqlGorivo = "SELECT Automobil.AutomobilID, Gorivo.ID, Gorivo.Naziv\n" +
+                String sqlGorivo = "SELECT Automobil.AutomobilID, Gorivo.GorivoID, Gorivo.Naziv\n" +
                               "FROM Automobil\n" +
-                              "INNER JOIN Gorivo ON Automobil.GorivoID = Gorivo.ID WHERE AutomobilID ="+ID;
+                              "INNER JOIN Gorivo ON Automobil.GorivoID = Gorivo.GorivoID WHERE AutomobilID ="+ID;
                 
                 
                 ResultSet rsID = s.executeQuery(sql);
@@ -550,6 +554,14 @@ public final class Prozor extends javax.swing.JFrame {
                 ResultSet rsModel = s.executeQuery(sqlModel);            
                 rsModel.next(); 
                 jComboBox2.setSelectedIndex(rsModel.getInt("ID")-1);
+                
+                ResultSet rsBoja = s.executeQuery(sqlBoja);
+                rsBoja.next();
+                jComboBox3.setSelectedIndex(rsBoja.getInt("ID")-1);
+
+                ResultSet rsGorivo = s.executeQuery(sqlGorivo);
+                rsGorivo.next();
+                jComboBox4.setSelectedIndex(rsModel.getInt("ID")-1);
                 
 
                 

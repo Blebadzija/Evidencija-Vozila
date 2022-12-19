@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author Computer
  */
 public class VoziloDO {
-    
+    public int id;
     public String dodatno;
     
     

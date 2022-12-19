@@ -5,14 +5,22 @@
 package evidencija.vozila;
 
 
+import java.awt.BorderLayout;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 
 /**
  *
@@ -134,7 +142,49 @@ public class Grafikon extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        int modelID = ((VoziloDO)jComboBox1.getSelectedItem()).id;
+        try {
+            c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
+            PreparedStatement ps = this.c.prepareStatement("SELECT ModelID, Godiste AS GodinaProzivodnje, Cena AS ProsecnaCena FROM Automobil WHERE ModelID = '"+modelID+"' ");
+  
+            ResultSet rs = ps.executeQuery();
+            DefaultTableModel dtm = new DefaultTableModel();
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
+            dtm.addColumn("GodinaProzivodnje");
+            dtm.addColumn("ProsecnaCena");
+            
+            while(rs.next()){
+                Object[] red = new Object[2];
+                red[0] = rs.getString("GodinaProzivodnje");
+                red[1] = rs.getString("ProsecnaCena");
+                
+                dtm.addRow(red);           
+                
+               
+            }
+            jTable1.setModel(dtm);
+            
+            
+            jPanel1.setLayout(new java.awt.BorderLayout());
+            for(int i=0; i<jTable1.getRowCount(); i++){
+                dataset.addValue(Integer.parseInt((String)jTable1.getValueAt(i, 2)), "ProsecnaCena", (String)jTable1.getValueAt(i, 1));  
+                            
+            }           
+             JFreeChart chart = ChartFactory.createPieChart(  
+                "Pie Chart Example",  
+                dataset,  
+                true,   
+                true,  
+                false);  
+            
+            ChartPanel CP = new ChartPanel(chart);
+            
+            jPanel1.removeAll(); 
+            jPanel1.add(CP,BorderLayout.CENTER);
+            jPanel1.validate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Grafikon.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
