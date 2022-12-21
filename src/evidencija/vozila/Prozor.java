@@ -580,12 +580,16 @@ public final class Prozor extends javax.swing.JFrame {
         try {
             c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
             int ID = Integer.parseInt (jTextField1.getText());
+            Object CB3ID = jComboBox3.getSelectedIndex()+1;
+            Object CB4ID = jComboBox4.getSelectedIndex()+1;
             Object model = jComboBox2.getSelectedIndex()+1;
             
             String sql = "UPDATE Automobil SET ModelID = '"+model+"' WHERE AutomobilID = "+ID;
             PreparedStatement ps = c.prepareStatement(sql);
             ps.execute();
             populate();
+            jComboBox3.setSelectedIndex((int) CB3ID- 1);
+            jComboBox4.setSelectedIndex((int) CB4ID- 1);
             jComboBox2.setSelectedIndex((int) model- 1);
         } catch (SQLException ex) {
             Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
@@ -605,12 +609,17 @@ public final class Prozor extends javax.swing.JFrame {
         try {
             c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
             int ID = Integer.parseInt (jTextField1.getText());
+            Object CB2ID = jComboBox2.getSelectedIndex()+1;
+            Object CB4ID = jComboBox4.getSelectedIndex()+1;
             Object boja = jComboBox3.getSelectedIndex()+1;
             
             String sql = "UPDATE Automobil SET BojeID = '"+boja+"' WHERE AutomobilID = "+ID;
             PreparedStatement ps = c.prepareStatement(sql);
             ps.execute();
             populate();
+            jComboBox2.setSelectedIndex((int) CB2ID- 1);
+            jComboBox4.setSelectedIndex((int) CB4ID- 1);
+            jComboBox3.setSelectedIndex((int) boja- 1);
         } catch (SQLException ex) {
             Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
         }        // TODO add your handling code here:
@@ -620,12 +629,17 @@ public final class Prozor extends javax.swing.JFrame {
         try {
             c = DriverManager.getConnection(EvidencijaVozila.URL_BAZE);
             int ID = Integer.parseInt (jTextField1.getText());
+            Object CB2ID = jComboBox2.getSelectedIndex()+1;
+            Object CB3ID = jComboBox3.getSelectedIndex()+1;
             Object gorivo = jComboBox4.getSelectedIndex()+1;
             
             String sql = "UPDATE Automobil SET GorivoID = '"+gorivo+"' WHERE AutomobilID = "+ID;
             PreparedStatement ps = c.prepareStatement(sql);
             ps.execute();
             populate();
+            jComboBox2.setSelectedIndex((int) CB2ID- 1);
+            jComboBox3.setSelectedIndex((int) CB3ID- 1);
+            jComboBox4.setSelectedIndex((int) gorivo- 1);
         } catch (SQLException ex) {
             Logger.getLogger(Prozor.class.getName()).log(Level.SEVERE, null, ex);
         }        // TODO add your handling code here:

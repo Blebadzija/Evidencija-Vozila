@@ -14,12 +14,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.PieChartBuilder;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 
 
 /**
@@ -54,7 +57,7 @@ public class Grafikon extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Model:");
 
@@ -82,11 +85,13 @@ public class Grafikon extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 505, Short.MAX_VALUE)
+            .addGap(0, 503, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,7 +152,7 @@ public class Grafikon extends javax.swing.JFrame {
             
             ResultSet rs = s.executeQuery("SELECT ModelID, Godiste AS GodinaProzivodnje, AVG(Cena) AS ProsecnaCena FROM Automobil WHERE ModelID = '"+modelID+"' GROUP BY ModelID, Godiste");
             DefaultTableModel dtm = new DefaultTableModel();
-            DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
+            DefaultPieDataset dataset = new DefaultPieDataset();  
             dtm.addColumn("GodinaProzivodnje");
             dtm.addColumn("ProsecnaCena");
             
@@ -163,10 +168,18 @@ public class Grafikon extends javax.swing.JFrame {
             jTable1.setModel(dtm);
             
             
+            for(int i = 0; i < jTable1.getRowCount(); i++){
+                dataset.setValue((String)jTable1.getValueAt(i, 0), Integer.parseInt((String) jTable1.getValueAt(i, 1)));
+            }
             
-        } catch (SQLException ex) {
-            Logger.getLogger(Grafikon.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            JFreeChart chart = ChartFactory.createPieChart("", dataset, true, true, false);
+            ChartPanel panel = new ChartPanel(chart);
+            jPanel1.removeAll(); 
+            jPanel1.add(panel,BorderLayout.CENTER);
+            jPanel1.validate();
+            jPanel1.repaint();
+            
+        } catch (SQLException ex) {}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
